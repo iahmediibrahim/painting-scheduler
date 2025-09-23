@@ -4,7 +4,7 @@ const path = require('path')
 const { formatDate, formatTime, formatDateTime } = require('./dateFormatter')
 const app = express()
 const PORT = 3001
-
+// TODO: use TS instead of JS
 // Import routes
 const bookingRoutes = require('./routes/bookingRoutes')
 const userRoutes = require('./routes/userRoutes')

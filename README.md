@@ -19,7 +19,7 @@ pnpm install
 pnpm dev
 ```
 
-The frontend will be available at [http://localhost:3002](http://localhost:3002).
+The frontend will be available at [http://localhost:3000](http://localhost:3000).
 
 ### Backend (Express)
 
@@ -66,4 +66,5 @@ API documentation is available at [http://localhost:3001/api-docs](http://localh
 - `GET /api/availability` - Get painter availability
 - `POST /api/availability` - Add new availability
 - `DELETE /api/availability/:id` - Delete availability
+
 # painting-scheduler
