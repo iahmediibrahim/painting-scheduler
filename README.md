@@ -1,36 +1,69 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Painting Scheduler
 
-## Getting Started
+A full-stack application for scheduling painting services, built with Next.js and Express.
 
-First, run the development server:
+## Project Structure
+
+- `src/` - Frontend Next.js application
+- `server/` - Backend Express API server
+
+## Installation
+
+### Frontend (Next.js)
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+# Install dependencies
+pnpm install
+
+# Run development server
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The frontend will be available at [http://localhost:3002](http://localhost:3002).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Backend (Express)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+# Navigate to server directory
+cd server
 
-## Learn More
+# Install dependencies
+pnpm install
 
-To learn more about Next.js, take a look at the following resources:
+# Run development server
+node index.js
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The backend API will be available at [http://localhost:3001](http://localhost:3001).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Features
 
-## Deploy on Vercel
+- Customer booking management
+- Painter availability scheduling
+- Automatic painter assignment based on ratings
+- Closest available slot suggestions
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## API Documentation
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+API documentation is available at [http://localhost:3001/api-docs](http://localhost:3001/api-docs) when the server is running.
+
+### Key Endpoints
+
+#### Users
+
+- `GET /api/users/painters` - Get all painters
+- `GET /api/users/customers` - Get all customers
+- `POST /api/users/painters` - Create a new painter
+- `POST /api/users/customers` - Create a new customer
+
+#### Bookings
+
+- `GET /api/bookings` - Get bookings (filter by userId and userType)
+- `POST /api/bookings/request` - Create a booking request
+
+#### Availability
+
+- `GET /api/availability` - Get painter availability
+- `POST /api/availability` - Add new availability
+- `DELETE /api/availability/:id` - Delete availability
+# painting-scheduler
