@@ -20,7 +20,7 @@ pnpm install
 pnpm dev
 ```
 
-The frontend will be available at [http://localhost:3002](http://localhost:3002).
+The frontend will be available at [http://localhost:3000](http://localhost:3000).
 
 ### Backend (NestJS)
 

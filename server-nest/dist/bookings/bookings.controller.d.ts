@@ -6,142 +6,142 @@ export declare class BookingsController {
     private readonly bookingsService;
     constructor(bookingsService: BookingsService);
     create(createBookingDto: CreateBookingDto, req: any): Promise<{
-        customer: {
-            id: string;
-            createdAt: Date;
-            updatedAt: Date;
-            email: string;
-            password: string;
-            name: string;
-            role: import("@prisma/client").$Enums.UserRole;
-        };
         painter: {
+            name: string;
+            email: string;
+            password: string;
+            role: import("@prisma/client").$Enums.UserRole;
             id: string;
             createdAt: Date;
             updatedAt: Date;
+        };
+        customer: {
+            name: string;
             email: string;
             password: string;
-            name: string;
             role: import("@prisma/client").$Enums.UserRole;
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
         };
     } & {
         id: string;
+        createdAt: Date;
+        updatedAt: Date;
         date: Date;
         startTime: Date;
         endTime: Date;
+        address: string;
+        painterId: string;
         status: import("@prisma/client").$Enums.BookingStatus;
         description: string | null;
-        address: string;
-        createdAt: Date;
-        updatedAt: Date;
         customerId: string;
-        painterId: string;
         availabilityId: string | null;
     }>;
     findAll(req: any): Promise<({
         painter: {
-            id: string;
-            email: string;
             name: string;
+            email: string;
+            id: string;
         };
     } & {
         id: string;
+        createdAt: Date;
+        updatedAt: Date;
         date: Date;
         startTime: Date;
         endTime: Date;
+        address: string;
+        painterId: string;
         status: import("@prisma/client").$Enums.BookingStatus;
         description: string | null;
-        address: string;
-        createdAt: Date;
-        updatedAt: Date;
         customerId: string;
-        painterId: string;
         availabilityId: string | null;
     })[] | ({
         customer: {
-            id: string;
-            email: string;
             name: string;
+            email: string;
+            id: string;
         };
     } & {
         id: string;
+        createdAt: Date;
+        updatedAt: Date;
         date: Date;
         startTime: Date;
         endTime: Date;
+        address: string;
+        painterId: string;
         status: import("@prisma/client").$Enums.BookingStatus;
         description: string | null;
-        address: string;
-        createdAt: Date;
-        updatedAt: Date;
         customerId: string;
-        painterId: string;
         availabilityId: string | null;
     })[]>;
     findOne(id: string, req: any): Promise<{
-        customer: {
-            id: string;
-            email: string;
-            name: string;
-        };
         painter: {
-            id: string;
-            email: string;
             name: string;
+            email: string;
+            id: string;
+        };
+        customer: {
+            name: string;
+            email: string;
+            id: string;
         };
     } & {
         id: string;
+        createdAt: Date;
+        updatedAt: Date;
         date: Date;
         startTime: Date;
         endTime: Date;
+        address: string;
+        painterId: string;
         status: import("@prisma/client").$Enums.BookingStatus;
         description: string | null;
-        address: string;
-        createdAt: Date;
-        updatedAt: Date;
         customerId: string;
-        painterId: string;
         availabilityId: string | null;
     }>;
     update(id: string, updateBookingDto: UpdateBookingDto, req: any): Promise<{
         id: string;
+        createdAt: Date;
+        updatedAt: Date;
         date: Date;
         startTime: Date;
         endTime: Date;
+        address: string;
+        painterId: string;
         status: import("@prisma/client").$Enums.BookingStatus;
         description: string | null;
-        address: string;
-        createdAt: Date;
-        updatedAt: Date;
         customerId: string;
-        painterId: string;
         availabilityId: string | null;
     }>;
     updateStatus(id: string, status: BookingStatus, req: any): Promise<{
         id: string;
+        createdAt: Date;
+        updatedAt: Date;
         date: Date;
         startTime: Date;
         endTime: Date;
+        address: string;
+        painterId: string;
         status: import("@prisma/client").$Enums.BookingStatus;
         description: string | null;
-        address: string;
-        createdAt: Date;
-        updatedAt: Date;
         customerId: string;
-        painterId: string;
         availabilityId: string | null;
     }>;
     remove(id: string, req: any): Promise<{
         id: string;
+        createdAt: Date;
+        updatedAt: Date;
         date: Date;
         startTime: Date;
         endTime: Date;
+        address: string;
+        painterId: string;
         status: import("@prisma/client").$Enums.BookingStatus;
         description: string | null;
-        address: string;
-        createdAt: Date;
-        updatedAt: Date;
         customerId: string;
-        painterId: string;
         availabilityId: string | null;
     }>;
 }
