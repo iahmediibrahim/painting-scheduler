@@ -1,0 +1,68 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id            String      @id @default(uuid())
+  email         String      @unique
+  password      String
+  name          String
+  role          UserRole
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  bookings      Booking[]   @relation("CustomerBookings")
+  painterBookings Booking[] @relation("PainterBookings")
+  availabilities Availability[]
+}
+
+enum UserRole {
+  CUSTOMER
+  PAINTER
+}
+
+model Booking {
+  id            String    @id @default(uuid())
+  customerId    String
+  painterId     String
+  date          DateTime
+  startTime     DateTime
+  endTime       DateTime
+  status        BookingStatus
+  description   String?
+  address       String
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  customer      User      @relation("CustomerBookings", fields: [customerId], references: [id])
+  painter       User      @relation("PainterBookings", fields: [painterId], references: [id])
+  availabilityId String?
+  availability  Availability? @relation(fields: [availabilityId], references: [id])
+}
+
+enum BookingStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  COMPLETED
+  CANCELLED
+}
+
+model Availability {
+  id        String   @id @default(uuid())
+  painterId String
+  date      DateTime
+  startTime DateTime
+  endTime   DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  painter   User     @relation(fields: [painterId], references: [id])
+  bookings  Booking[]
+}

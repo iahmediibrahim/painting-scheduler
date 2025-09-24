@@ -10,21 +10,21 @@ export function useBookings(currentUser: User | null) {
 
 	// Define the return type explicitly to handle both painter and customer bookings
 	const { data: bookings = [] } = useQuery<Booking[]>({
-		queryKey: ['bookings', currentUser?.id, currentUser?.type],
+		queryKey: ['bookings', currentUser?.id, currentUser?.role],
 		queryFn: async () => {
 			if (!currentUser) return []
-			return currentUser.type === 'customer'
+			return currentUser.role.toLowerCase() === 'customer'
 				? api.getCustomerBookings(currentUser.id)
 				: api.getPainterBookings(currentUser.id)
 		},
 		enabled: !!currentUser,
 	})
 
-	// Invalidate painter bookings on page load
+	// Invalidate painter and customer bookings on page load
 	useEffect(() => {
-		if (currentUser && currentUser.type === 'painter') {
+		if (currentUser) {
 			queryClient.invalidateQueries({
-				queryKey: ['bookings', currentUser.id, currentUser.type],
+				queryKey: ['bookings', currentUser.id, currentUser.role.toLowerCase()],
 			})
 		}
 	}, [currentUser, queryClient])
@@ -33,13 +33,87 @@ export function useBookings(currentUser: User | null) {
 		mutationFn: (bookingData: BookingRequest) => api.createBooking(bookingData),
 		onSuccess: () => {
 			// Invalidate relevant queries to refetch data
+			// Force refetch all booking queries regardless of user role
+			queryClient.invalidateQueries({
+				queryKey: ['bookings'],
+				refetchType: 'all',
+			})
+
+			// Also invalidate specific user's bookings
 			if (currentUser) {
 				queryClient.invalidateQueries({
-					queryKey: ['bookings', currentUser.id, currentUser.type],
+					queryKey: [
+						'bookings',
+						currentUser.id,
+						currentUser.role.toLowerCase(),
+					],
+					refetchType: 'all',
 				})
-				if (currentUser.type === 'painter') {
+
+				// For painters, also invalidate availabilities
+				if (currentUser.role.toLowerCase() === 'painter') {
 					queryClient.invalidateQueries({
 						queryKey: ['availabilities', currentUser.id],
+						refetchType: 'all',
+					})
+				}
+			}
+		},
+	})
+
+	const updateBookingStatus = useMutation({
+		mutationFn: ({
+			bookingId,
+			status,
+		}: {
+			bookingId: string
+			status: string
+		}) => api.updateBookingStatus(bookingId, status.toUpperCase()),
+		onSuccess: () => {
+			// Invalidate ALL booking queries to ensure UI updates without refresh
+			queryClient.invalidateQueries({
+				queryKey: ['bookings'],
+				refetchType: 'all',
+			})
+			
+			// Also invalidate user-specific queries
+			if (currentUser) {
+				queryClient.invalidateQueries({
+					queryKey: [
+						'bookings',
+						currentUser.id,
+						currentUser.role.toLowerCase(),
+					],
+					refetchType: 'all',
+				})
+			}
+		},
+	})
+
+	const cancelBooking = useMutation({
+		mutationFn: (bookingId: string) => api.cancelBooking(bookingId),
+		onSuccess: () => {
+			// Invalidate all booking queries to refresh the data
+			queryClient.invalidateQueries({
+				queryKey: ['bookings'],
+				refetchType: 'all',
+			})
+			
+			if (currentUser) {
+				queryClient.invalidateQueries({
+					queryKey: [
+						'bookings',
+						currentUser.id,
+						currentUser.role.toLowerCase(),
+					],
+					refetchType: 'all',
+				})
+				
+				// For painters, also invalidate availabilities
+				if (currentUser.role.toLowerCase() === 'painter') {
+					queryClient.invalidateQueries({
+						queryKey: ['availabilities', currentUser.id],
+						refetchType: 'all',
 					})
 				}
 			}
@@ -49,5 +123,7 @@ export function useBookings(currentUser: User | null) {
 	return {
 		bookings,
 		createBooking,
+		updateBookingStatus,
+		cancelBooking,
 	}
 }

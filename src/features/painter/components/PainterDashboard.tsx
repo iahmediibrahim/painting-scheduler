@@ -87,8 +87,7 @@ export default function PainterDashboard({ painter }: PainterDashboardProps) {
 								</svg>
 							</span>
 							<span className="text-gray-700">
-								Specialty:{' '}
-								<span className="font-medium">{painter.specialty}</span>
+								Specialty: <span className="font-medium">{painter.role}</span>
 							</span>
 						</div>
 					</div>

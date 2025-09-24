@@ -18,9 +18,45 @@ interface Availability {
 
 interface AvailabilityListProps {
 	availabilities: Availability[]
+	isLoading?: boolean
 }
 
-export function AvailabilityList({ availabilities }: AvailabilityListProps) {
+export function AvailabilityList({
+	availabilities,
+	isLoading = false,
+}: AvailabilityListProps) {
+	if (isLoading) {
+		return (
+			<Card className="mb-6">
+				<CardHeader>
+					<SectionHeader
+						title="My Availability"
+						badgeCount={0}
+						badgeText="Loading..."
+					/>
+				</CardHeader>
+				<CardBody>
+					<div className="space-y-3">
+						{[...Array(3)].map((_, index) => (
+							<div
+								key={index}
+								className="border border-gray-200 rounded-lg p-4 animate-pulse"
+							>
+								<div className="flex justify-between items-center">
+									<div>
+										<div className="h-4 bg-gray-200 rounded w-48 mb-2"></div>
+										<div className="h-3 bg-gray-200 rounded w-32"></div>
+									</div>
+									<div className="h-6 bg-gray-200 rounded w-20"></div>
+								</div>
+							</div>
+						))}
+					</div>
+				</CardBody>
+			</Card>
+		)
+	}
+
 	return (
 		<Card className="mb-6">
 			<CardHeader>

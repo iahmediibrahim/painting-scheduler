@@ -1,11 +1,12 @@
 # Painting Scheduler
 
-A full-stack application for scheduling painting services, built with Next.js and Express.
+A full-stack application for scheduling painting services, built with Next.js and NestJS.
 
 ## Project Structure
 
 - `src/` - Frontend Next.js application
-- `server/` - Backend Express API server
+- `server/` - Legacy Express API server (deprecated)
+- `server-nest/` - New NestJS backend with Prisma ORM
 
 ## Installation
 
@@ -19,52 +20,74 @@ pnpm install
 pnpm dev
 ```
 
-The frontend will be available at [http://localhost:3000](http://localhost:3000).
+The frontend will be available at [http://localhost:3002](http://localhost:3002).
 
-### Backend (Express)
+### Backend (NestJS)
 
 ```bash
-# Navigate to server directory
-cd server
+# Navigate to server-nest directory
+cd server-nest
 
 # Install dependencies
-pnpm install
+npm install
+
+# Create a .env file with the following content:
+# DATABASE_URL="postgresql://username:password@localhost:5432/..."
+# DIRECT_URL="postgresql://username:password@localhost:5432/..."
+# JWT_SECRET="your-secret-jwt-token"
+# PORT=3001
 
 # Run development server
-node index.js
+npm run start:dev
 ```
 
-The backend API will be available at [http://localhost:3001](http://localhost:3001).
+The NestJS backend API will be available at [http://localhost:3001](http://localhost:3001).
 
 ## Features
 
+- User authentication with JWT and role-based access control
 - Customer booking management
 - Painter availability scheduling
-- Automatic painter assignment based on ratings
-- Closest available slot suggestions
+- Automatic painter assignment based on availability
+- Intelligent closest available slot suggestions
+- Real-time loading states and error handling
+- Responsive UI for both painters and customers
 
-## API Documentation
+## NestJS Backend Architecture
 
-API documentation is available at [http://localhost:3001/api-docs](http://localhost:3001/api-docs) when the server is running.
+The new NestJS backend provides several improvements:
 
-### Key Endpoints
+- Modular architecture with clear separation of concerns
+- Type-safe database access with Prisma ORM
+- Robust authentication and authorization
+- Comprehensive validation with DTOs
+- Improved error handling with custom exceptions
+- PostgreSQL database support via Supabase
 
-#### Users
+## API Endpoints
 
-- `GET /api/users/painters` - Get all painters
-- `GET /api/users/customers` - Get all customers
-- `POST /api/users/painters` - Create a new painter
-- `POST /api/users/customers` - Create a new customer
+### Authentication
 
-#### Bookings
+- `POST /auth/register` - Register a new user (painter or customer)
+- `POST /auth/login` - Login and receive JWT token
 
-- `GET /api/bookings` - Get bookings (filter by userId and userType)
-- `POST /api/bookings/request` - Create a booking request
+### Users
 
-#### Availability
+- `GET /users/painters` - Get all painters
+- `GET /users/me` - Get current user profile
 
-- `GET /api/availability` - Get painter availability
-- `POST /api/availability` - Add new availability
-- `DELETE /api/availability/:id` - Delete availability
+### Bookings
 
-# painting-scheduler
+- `GET /bookings` - Get bookings (filtered by user role)
+- `POST /bookings` - Create a new booking (with automatic closest slot finding)
+- `GET /bookings/:id` - Get booking details
+
+### Availability
+
+- `GET /availabilities` - Get painter availability
+- `POST /availabilities` - Add new availability
+- `DELETE /availabilities/:id` - Delete availability
+
+## Environment Setup
+
+The application requires environment variables for database connection and JWT authentication. See the `.env.example` files in both frontend and backend directories.

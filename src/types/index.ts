@@ -2,7 +2,7 @@ export interface User {
 	id: string
 	name: string
 	email: string
-	type: 'painter' | 'customer'
+	role: 'painter' | 'customer'
 }
 
 export interface Painter extends User {
@@ -34,8 +34,10 @@ export interface Booking {
 	customer?: Customer
 	startTime: string
 	endTime: string
-	status: 'confirmed' | 'pending' | 'cancelled' | 'completed'
+	status: 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'COMPLETED' | 'CANCELLED'
 	createdAt: string
+	address?: string
+	description?: string
 }
 
 export interface BookingRequest {

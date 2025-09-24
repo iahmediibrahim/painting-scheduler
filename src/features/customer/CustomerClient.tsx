@@ -1,9 +1,9 @@
 'use client'
 
-import { BookingsList, UserSelector } from '@/features/shared'
+import { BookingsList, BookingDetailsModal, ConfirmationModal } from '@/features/shared'
 import { useBookings } from '@/hooks/useBookings'
 import { useUser } from '@/hooks/useUser'
-import { Booking, BookingRequest, Customer, Painter, User } from '@/types'
+import { Booking, BookingRequest, Customer, Painter } from '@/types'
 import { useState } from 'react'
 import {
 	BookingForm,
@@ -19,17 +19,34 @@ interface ClosestSlot {
 }
 
 export default function CustomerClient() {
-	const { currentUser, setCurrentUser, painters } = useUser()
-	const { bookings, createBooking } = useBookings(currentUser)
+	const { currentUser, painters } = useUser()
+	const { bookings, createBooking, cancelBooking } = useBookings(currentUser)
 
 	const [closestAvailableSlot, setClosestAvailableSlot] =
 		useState<ClosestSlot | null>(null)
 	const [error, setError] = useState<string | null>(null)
+	const [selectedBookingId, setSelectedBookingId] = useState<string | null>(null)
+	const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null)
+	const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false)
+	const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false)
+	const [bookingToCancel, setBookingToCancel] = useState<string | null>(null)
 
 	const customerUser = currentUser as Customer | null
-
-	const handleUserChange = (user: User) => {
-		setCurrentUser(user)
+	
+	const handleCancelBooking = (bookingId: string) => {
+		setBookingToCancel(bookingId);
+		setIsConfirmModalOpen(true);
+	}
+	
+	const confirmCancelBooking = () => {
+		if (bookingToCancel) {
+			cancelBooking.mutate(bookingToCancel);
+		}
+	}
+	
+	const handleViewDetails = (booking: Booking) => {
+		setSelectedBooking(booking);
+		setIsDetailsModalOpen(true);
 	}
 
 	const handleBookingAttempt = (
@@ -75,7 +92,6 @@ export default function CustomerClient() {
 	if (!currentUser) {
 		return (
 			<div className="container mx-auto px-4 py-8">
-				<UserSelector onUserChange={handleUserChange} />
 				<div className="bg-gradient-to-r from-amber-50 to-yellow-50 border-l-4 border-amber-500 rounded-lg p-4 mt-6 shadow-sm">
 					<div className="flex items-center">
 						<svg
@@ -91,18 +107,15 @@ export default function CustomerClient() {
 							/>
 						</svg>
 						<p className="text-amber-800 font-medium">
-							Please select a customer to continue.
+							Loading customer information...
 						</p>
 					</div>
 				</div>
 			</div>
 		)
 	}
-	console.log(error)
 	return (
 		<div className="container mx-auto px-4 py-8">
-			<UserSelector onUserChange={handleUserChange} currentUser={currentUser} />
-
 			{customerUser && <CustomerDashboard customer={customerUser} />}
 
 			{error && (
@@ -133,7 +146,28 @@ export default function CustomerClient() {
 							{bookings.length} bookings
 						</span>
 					</div>
-					<BookingsList bookings={bookings} userType="customer" />
+					<BookingsList 
+						bookings={bookings} 
+						userType="customer" 
+						onCancel={handleCancelBooking}
+						onViewDetails={handleViewDetails}
+					/>
+					
+					<BookingDetailsModal
+						booking={selectedBooking}
+						isOpen={isDetailsModalOpen}
+						onClose={() => setIsDetailsModalOpen(false)}
+					/>
+					
+					<ConfirmationModal
+						isOpen={isConfirmModalOpen}
+						onClose={() => setIsConfirmModalOpen(false)}
+						onConfirm={confirmCancelBooking}
+						title="Cancel Booking"
+						message="Are you sure you want to cancel this booking? This action cannot be undone."
+						confirmText="Yes, Cancel Booking"
+						cancelText="No, Keep Booking"
+					/>
 				</section>
 			</div>
 		</div>
